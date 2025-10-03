@@ -96,6 +96,7 @@
             <div class="max-w-md mx-auto text-center bg-indigo-100 text-indigo-800 p-6 rounded-2xl shadow">
                 <p class="font-semibold text-xl">Różnica na korzyść miesiąca z pracą:</p>
                 <p class="text-4xl font-bold mt-2" id="roznica">0,00 zł</p>
+                <p class="text-lg font-medium text-indigo-700 mt-2" id="roznica-procent"></p>
             </div>
         </div>
 
@@ -132,6 +133,7 @@
 
     // Podsumowanie
     const roznicaEl = document.getElementById('roznica');
+    const roznicaProcentEl = document.getElementById('roznica-procent');
 
     function formatCurrency(value) {
         return value.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' });
@@ -165,6 +167,8 @@
 
         // Różnica
         const roznica = netto50 - nettoStd;
+        const roznicaProcent = netto50 > 0 ? (roznica / netto50) * 100 : 0;
+
 
         // --- Aktualizacja interfejsu ---
         updateUI({
@@ -176,7 +180,8 @@
             podstawaOpodatkowaniaStd,
             zaliczkaNaPodatekStd,
             nettoStd,
-            roznica
+            roznica,
+            roznicaProcent
         });
     }
 
@@ -197,6 +202,12 @@
 
         // Podsumowanie
         roznicaEl.textContent = formatCurrency(data.roznica);
+        
+        if (data.roznicaProcent > 0.01) {
+            roznicaProcentEl.textContent = `(wypłata mniejsza o ${data.roznicaProcent.toFixed(2)}%)`;
+        } else {
+            roznicaProcentEl.textContent = '';
+        }
     }
     
     // --- INICJALIZACJA I EVENT LISTENERS ---
